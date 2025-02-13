@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -9,15 +9,40 @@ import {
   faPhone,
   faEnvelope
 } from '@fortawesome/free-solid-svg-icons';
-import { 
-  faFacebook, 
-  faTwitter, 
-  faLinkedin 
-} from '@fortawesome/free-brands-svg-icons';
+import { properties } from '../../data/properties';
+import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import Header from '../../components/Header/Header';
 import './Home.css';
 
 const Home = () => {
+  const [visibleProperties, setVisibleProperties] = useState(6);
+  const [showMoreClicked, setShowMoreClicked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const observerTarget = useRef(null);
+
+  useEffect(() => {
+    if (!showMoreClicked) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading) {
+          setLoading(true);
+          setTimeout(() => {
+            setVisibleProperties(prev => Math.min(prev + 6, properties.length));
+            setLoading(false);
+          }, 500); // Simulate loading delay
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [showMoreClicked, loading]);
+
   const handleSearch = (searchTerm) => {
     window.location.href = `/offices?search=${encodeURIComponent(searchTerm)}`;
   };
@@ -35,6 +60,28 @@ const Home = () => {
       <Header onSearch={handleSearch} />
       
       <main>
+        <section className="office-listings">
+          <h2>Available Offices</h2>
+          <div className="property-grid">
+            {properties.slice(0, visibleProperties).map(property => (
+              <PropertyCard key={property.id} property={property} />
+            ))}
+          </div>
+          {!showMoreClicked && visibleProperties < properties.length && (
+            <button 
+              className="show-more-btn"
+              onClick={() => setShowMoreClicked(true)}
+            >
+              Show More
+            </button>
+          )}
+          {showMoreClicked && visibleProperties < properties.length && (
+            <div ref={observerTarget} className="loading-indicator">
+              Loading more offices...
+            </div>
+          )}
+        </section>
+
         <section className="features">
           <h2>Why Choose Office Plus?</h2>
           <div className="features-grid">
@@ -66,48 +113,17 @@ const Home = () => {
           <p>Office Plus provides premium office spaces designed to enhance productivity and foster success. From private offices to collaborative workspaces, we offer flexible solutions for businesses of all sizes.</p>
         </section>
 
-        <section className="contact" id="contact">
-          <h2>Contact Us</h2>
-          <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-            <input type="text" placeholder="Name" required />
-            <input type="email" placeholder="Email" required />
-            <select name="inquiry-type" required>
-              <option value="">Select Inquiry Type</option>
-              <option value="viewing">Schedule Viewing</option>
-              <option value="pricing">Pricing Information</option>
-              <option value="availability">Check Availability</option>
-              <option value="other">Other</option>
-            </select>
-            <textarea placeholder="Message" required />
-            <button type="submit">Send Message</button>
-          </form>
-        </section>
       </main>
 
-      <footer>
+      <footer className="sticky-footer">
         <div className="footer-content">
           <div className="footer-section">
             <h3>Office Plus</h3>
             <p>Your premium office space solution</p>
           </div>
-          <div className="footer-section">
-            <h3>Contact Info</h3>
+          <div className="footer-section contact-info">
             <p><FontAwesomeIcon icon={faPhone} /> (123) 456-7890</p>
             <p><FontAwesomeIcon icon={faEnvelope} /> info@officeplus.com</p>
-          </div>
-          <div className="footer-section">
-            <h3>Follow Us</h3>
-            <div className="social-links">
-              <a href="https://facebook.com/officeplus" target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faFacebook} />
-              </a>
-              <a href="https://twitter.com/officeplus" target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faTwitter} />
-              </a>
-              <a href="https://linkedin.com/company/officeplus" target="_blank" rel="noopener noreferrer">
-                <FontAwesomeIcon icon={faLinkedin} />
-              </a>
-            </div>
           </div>
         </div>
         <div className="footer-bottom">
