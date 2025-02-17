@@ -2,10 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faWifi, 
-  faClock, 
-  faCoffee, 
-  faShieldAlt,
   faPhone,
   faEnvelope
 } from '@fortawesome/free-solid-svg-icons';
@@ -53,7 +49,6 @@ const Home = () => {
         <div className="hero-content">
           <h1 className="hero-title">Find Your Perfect Office Space</h1>
           <p className="hero-subtitle">Discover premium office spaces designed for productivity and success</p>
-          <Link to="/offices" className="cta-button">View Available Offices</Link>
         </div>
       </div>
 
@@ -80,37 +75,6 @@ const Home = () => {
               Loading more offices...
             </div>
           )}
-        </section>
-
-        <section className="features">
-          <h2>Why Choose Office Plus?</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <FontAwesomeIcon icon={faWifi} />
-              <h3>High-Speed Internet</h3>
-              <p>Enterprise-grade connectivity in all locations</p>
-            </div>
-            <div className="feature-card">
-              <FontAwesomeIcon icon={faClock} />
-              <h3>24/7 Access</h3>
-              <p>Work whenever suits you best</p>
-            </div>
-            <div className="feature-card">
-              <FontAwesomeIcon icon={faCoffee} />
-              <h3>Premium Amenities</h3>
-              <p>Fully equipped kitchens and break rooms</p>
-            </div>
-            <div className="feature-card">
-              <FontAwesomeIcon icon={faShieldAlt} />
-              <h3>Secure Access</h3>
-              <p>State-of-the-art security systems</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="about" id="about">
-          <h2>About Us</h2>
-          <p>Office Plus provides premium office spaces designed to enhance productivity and foster success. From private offices to collaborative workspaces, we offer flexible solutions for businesses of all sizes.</p>
         </section>
 
       </main>

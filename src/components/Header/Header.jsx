@@ -99,34 +99,6 @@ const Header = ({ onSearch }) => {
                         </form>
                     </div>
                     <nav className={`nav-links ${isMobileMenuOpen ? 'mobile-visible' : ''}`}>
-                        <Link 
-                            to="/" 
-                            className={location.pathname === '/' ? 'active' : ''}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            Home
-                        </Link>
-                        <Link 
-                            to="/offices" 
-                            className={location.pathname === '/offices' ? 'active' : ''}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            Offices
-                        </Link>
-                        <a 
-                            href="#about" 
-                            onClick={() => scrollToSection('about')}
-                            className={activeSection === 'about' ? 'active' : ''}
-                        >
-                            About
-                        </a>
-                        <a 
-                            href="#contact" 
-                            onClick={() => scrollToSection('contact')}
-                            className={activeSection === 'contact' ? 'active' : ''}
-                        >
-                            Contact
-                        </a>
                     </nav>
                 </div>
             </div>
