@@ -19,14 +19,21 @@ const PropertyCard = ({ property }) => {
     capacity, 
     type, 
     amenities, 
-    availability 
+    availability,
+    _id 
   } = property;
 
+  const fallbackImage = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80';
+
   return (
-    <div className="property-card">
+    <a href={`/office/${_id}`} className="property-card">
       <div 
         className="property-image" 
-        style={{ backgroundImage: `url('${image}')` }}
+        style={{ 
+          backgroundImage: `url('${image || fallbackImage}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
       >
         <div className={`property-availability ${availability.toLowerCase().includes('immediate') ? 'immediate' : ''}`}>
           {availability}
@@ -49,24 +56,8 @@ const PropertyCard = ({ property }) => {
             <FontAwesomeIcon icon={faBuilding} /> {type}
           </span>
         </div>
-        <div className="property-amenities">
-          <h4>Amenities</h4>
-          <div className="amenities-grid">
-            {amenities.map((amenity, index) => (
-              <span key={index}>
-                <FontAwesomeIcon icon={faCheck} /> {amenity}
-              </span>
-            ))}
-          </div>
-        </div>
-        <button 
-          className="view-details-btn"
-          onClick={() => window.location.href = `/office/${property.id}`}
-        >
-          View Details
-        </button>
       </div>
-    </div>
+    </a>
   );
 };
 

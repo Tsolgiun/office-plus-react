@@ -42,7 +42,7 @@
 
 @media (max-width: 768px) {
     .listings-content {
-        padding-top: 100px;
+        padding: 90px 10px 30px;
     }
 
     .listings-section h2 {
@@ -50,6 +50,8 @@
     }
 
     .property-grid {
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 10px 0;
     }
 }

@@ -5,17 +5,39 @@ import {
   faPhone,
   faEnvelope
 } from '@fortawesome/free-solid-svg-icons';
-import { properties } from '../../data/properties';
+import { propertyService } from '../../services/api';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import Header from '../../components/Header/Header';
 import './Home.css';
 
 const Home = () => {
+  const [properties, setProperties] = useState([]);
   const [visibleProperties, setVisibleProperties] = useState(6);
   const [showMoreClicked, setShowMoreClicked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const observerTarget = useRef(null);
 
+  // Fetch properties when component mounts
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        setLoading(true);
+        const data = await propertyService.getAllProperties();
+        setProperties(data);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load properties. Please try again later.');
+        console.error('Error fetching properties:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
+  // Handle infinite scroll
   useEffect(() => {
     if (!showMoreClicked) return;
 
@@ -49,6 +71,7 @@ const Home = () => {
         <div className="hero-content">
           <h1 className="hero-title">Find Your Perfect Office Space</h1>
           <p className="hero-subtitle">Discover premium office spaces designed for productivity and success</p>
+          <Link to="/offices" className="hero-cta">Browse Offices</Link>
         </div>
       </div>
 
@@ -57,11 +80,17 @@ const Home = () => {
       <main>
         <section className="office-listings">
           <h2>Available Offices</h2>
-          <div className="property-grid">
-            {properties.slice(0, visibleProperties).map(property => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </div>
+      <div className="property-grid">
+        {error ? (
+          <div className="error-message">{error}</div>
+        ) : loading && properties.length === 0 ? (
+          <div className="loading-message">Loading properties...</div>
+        ) : (
+          properties.slice(0, visibleProperties).map(property => (
+            <PropertyCard key={property._id} property={property} />
+          ))
+        )}
+      </div>
           {!showMoreClicked && visibleProperties < properties.length && (
             <button 
               className="show-more-btn"
