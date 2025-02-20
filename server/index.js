@@ -15,24 +15,50 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// MongoDB Connection
-console.log('Attempting to connect to MongoDB...');
-mongoose.connect('mongodb://127.0.0.1:27017/office-plus', {
-}).then(() => {
-  console.log('Successfully connected to MongoDB');
-  console.log('Database name: office-plus');
-  console.log('Connection state:', mongoose.connection.readyState);
-}).catch((error) => {
-  console.error('MongoDB connection error:', error);
-  console.error('Connection state:', mongoose.connection.readyState);
+// MongoDB Connection with retries
+const connectWithRetry = async (retries = 5, delay = 5000) => {
+  console.log('Attempting to connect to MongoDB...');
+  
+  for (let i = 0; i < retries; i++) {
+    try {
+      await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/office-plus', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+      });
+      
+      console.log('Successfully connected to MongoDB');
+      console.log('Database name:', mongoose.connection.name);
+      console.log('Connection state:', mongoose.connection.readyState);
+      return;
+    } catch (error) {
+      console.error(`MongoDB connection attempt ${i + 1} failed:`, error.message);
+      
+      if (i === retries - 1) {
+        console.error('All connection attempts failed');
+        throw error;
+      }
+      
+      console.log(`Retrying in ${delay/1000} seconds...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+};
+
+// Initialize database connection
+connectWithRetry().catch(error => {
+  console.error('Failed to establish database connection:', error);
+  process.exit(1);
 });
 
+// Monitor database connection
 mongoose.connection.on('error', err => {
   console.error('MongoDB connection error:', err);
 });
 
 mongoose.connection.on('disconnected', () => {
   console.log('MongoDB disconnected');
+  connectWithRetry().catch(console.error);
 });
 
 // Import models (in order of dependencies)
