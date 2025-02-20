@@ -233,18 +233,24 @@ const mongooseOptions = {
 // Main seeding function
 const seedDatabase = async () => {
   try {
+    // Get MongoDB URI from environment variable or use local fallback
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/office-plus';
+    console.log('Using database:', MONGODB_URI.includes('localhost') || MONGODB_URI.includes('127.0.0.1') ? 'Local MongoDB' : 'MongoDB Atlas');
+
     // Connect to MongoDB with retry logic
     let retries = 3;
     while (retries > 0) {
       try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/office-plus', mongooseOptions);
-        console.log('Connected to MongoDB');
+        await mongoose.connect(MONGODB_URI, mongooseOptions);
+        console.log('Connected to MongoDB successfully');
         break;
       } catch (err) {
         console.log(`Connection attempt failed. Retries left: ${retries - 1}`);
+        console.error('Connection error:', err.message);
         retries--;
         if (retries === 0) throw err;
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retry
+        console.log('Waiting 2 seconds before retrying...');
+        await new Promise(resolve => setTimeout(resolve, 2000));
       }
     }
 
