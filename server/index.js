@@ -3,8 +3,16 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 
+// CORS Configuration
+const CORS_ORIGINS = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : ['https://office-plus.netlify.app'];
+
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: CORS_ORIGINS,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB Connection
