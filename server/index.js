@@ -27,8 +27,17 @@ mongoose.connection.on('disconnected', () => {
   console.log('MongoDB disconnected');
 });
 
+// Import models (in order of dependencies)
+require('./models/Facility');
+require('./models/Amenity');
+require('./models/Building');
+require('./models/Property');
+require('./models/User');
+require('./models/Booking');
+
 // Routes
 const propertiesRoutes = require('./routes/properties');
+console.log('Models registered, setting up routes...');
 app.use('/api/properties', propertiesRoutes);
 
 // Error handling middleware

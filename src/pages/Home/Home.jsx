@@ -12,46 +12,49 @@ import './Home.css';
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
-  const [visibleProperties, setVisibleProperties] = useState(6);
-  const [showMoreClicked, setShowMoreClicked] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const observerTarget = useRef(null);
 
-  // Fetch properties when component mounts
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        setLoading(true);
-        const data = await propertyService.getAllProperties();
-        setProperties(data);
-        setError(null);
-      } catch (err) {
-        setError('Failed to load properties. Please try again later.');
-        console.error('Error fetching properties:', err);
-      } finally {
-        setLoading(false);
+  // Fetch properties
+  const fetchProperties = async (page) => {
+    try {
+      setLoading(true);
+      const data = await propertyService.getAllProperties(page);
+      
+      if (!data || !data.properties) {
+        throw new Error('Invalid response from server');
       }
-    };
 
-    fetchProperties();
+      setProperties(prev => page === 1 ? data.properties : [...prev, ...data.properties]);
+      setTotalPages(data.pagination.pages);
+      setError(null);
+    } catch (err) {
+      setError('Failed to load properties. Please try again later.');
+      console.error('Error fetching properties:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial load
+  useEffect(() => {
+    fetchProperties(1);
   }, []);
 
   // Handle infinite scroll
   useEffect(() => {
-    if (!showMoreClicked) return;
+    if (loading || currentPage >= totalPages) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !loading) {
-          setLoading(true);
-          setTimeout(() => {
-            setVisibleProperties(prev => Math.min(prev + 6, properties.length));
-            setLoading(false);
-          }, 500); // Simulate loading delay
+        if (entries[0].isIntersecting) {
+          setCurrentPage(prev => prev + 1);
         }
       },
-      { threshold: 1.0 }
+      { threshold: 0.5 }
     );
 
     if (observerTarget.current) {
@@ -59,7 +62,14 @@ const Home = () => {
     }
 
     return () => observer.disconnect();
-  }, [showMoreClicked, loading]);
+  }, [loading, currentPage, totalPages]);
+
+  // Fetch more properties when page changes
+  useEffect(() => {
+    if (currentPage > 1) {
+      fetchProperties(currentPage);
+    }
+  }, [currentPage]);
 
   const handleSearch = (searchTerm) => {
     window.location.href = `/offices?search=${encodeURIComponent(searchTerm)}`;
@@ -82,28 +92,24 @@ const Home = () => {
           <h2>Available Offices</h2>
       <div className="property-grid">
         {error ? (
-          <div className="error-message">{error}</div>
-        ) : loading && properties.length === 0 ? (
-          <div className="loading-message">Loading properties...</div>
+          <div className="error-message" role="alert">{error}</div>
+        ) : properties.length === 0 && loading ? (
+          <div className="loading-message" role="status">Loading properties...</div>
+        ) : properties.length === 0 ? (
+          <div className="no-results" role="status">No properties found</div>
         ) : (
-          properties.slice(0, visibleProperties).map(property => (
-            <PropertyCard key={property._id} property={property} />
-          ))
+          <>
+            {properties.map(property => (
+              <PropertyCard key={property.id} property={property} />
+            ))}
+            {currentPage < totalPages && (
+              <div ref={observerTarget} className="loading-indicator" role="status">
+                {loading ? 'Loading more offices...' : 'Scroll for more'}
+              </div>
+            )}
+          </>
         )}
       </div>
-          {!showMoreClicked && visibleProperties < properties.length && (
-            <button 
-              className="show-more-btn"
-              onClick={() => setShowMoreClicked(true)}
-            >
-              Show More
-            </button>
-          )}
-          {showMoreClicked && visibleProperties < properties.length && (
-            <div ref={observerTarget} className="loading-indicator">
-              Loading more offices...
-            </div>
-          )}
         </section>
 
       </main>

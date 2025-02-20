@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Listings from './pages/Listings/Listings';
+import PropertyDetail from './pages/PropertyDetail/PropertyDetail';
 import './App.css';
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/offices" element={<Listings />} />
-          <Route path="/office/:id" element={<Navigate to="/offices" />} />
+          <Route path="/office/:id" element={<PropertyDetail />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
