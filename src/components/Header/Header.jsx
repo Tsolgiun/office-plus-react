@@ -9,7 +9,6 @@ const Header = ({ onSearch }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [activeSection, setActiveSection] = useState('');
     const location = useLocation();
 
     const handleScroll = useCallback(() => {
@@ -21,49 +20,10 @@ const Header = ({ onSearch }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [handleScroll]);
 
-    useEffect(() => {
-        const observerOptions = {
-            rootMargin: '-80px 0px 0px 0px',
-            threshold: 0.5
-        };
-
-        const handleIntersect = (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    setActiveSection(entry.target.id);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(handleIntersect, observerOptions);
-
-        // Observe sections with IDs
-        document.querySelectorAll('section[id]').forEach(section => {
-            observer.observe(section);
-        });
-
-        return () => observer.disconnect();
-    }, []);
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (onSearch) {
             onSearch(searchTerm);
-        }
-        setIsMobileMenuOpen(false);
-    };
-
-    const scrollToSection = (sectionId) => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            const headerOffset = 80;
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
         }
         setIsMobileMenuOpen(false);
     };
