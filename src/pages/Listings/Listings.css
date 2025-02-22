@@ -1,0 +1,106 @@
+.listings-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+.listings-content {
+    padding: 120px 5% 40px;
+    flex: 1;
+}
+
+.listings-section {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.listings-section h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2rem;
+    color: #333;
+    font-family: var(--font-secondary);
+    font-weight: 700;
+}
+
+.property-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.no-results {
+    text-align: center;
+    color: #666;
+    grid-column: 1 / -1;
+    padding: 40px;
+    font-size: 1.1rem;
+    font-family: var(--font-primary);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2rem;
+    color: #666;
+    font-family: var(--font-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.loading::after {
+    content: '';
+    width: 24px;
+    height: 24px;
+    margin-left: 12px;
+    border: 3px solid #ddd;
+    border-top-color: #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.error {
+    text-align: center;
+    padding: 40px;
+    margin: 20px 0;
+    background-color: #fff3f3;
+    color: #e74c3c;
+    border-radius: 8px;
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    border: 1px solid #ffd7d7;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .listings-content {
+        padding: 90px 10px 30px;
+    }
+
+    .listings-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .property-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 10px 0;
+    }
+
+    .loading, .error, .no-results {
+        padding: 20px;
+        font-size: 1rem;
+    }
+}
