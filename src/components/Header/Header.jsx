@@ -1,11 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faBars, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faBars, faTimes, faUser, faCaretDown, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../../contexts/AuthContext';
 import Logo from '../Logo/Logo';
 import './Header.css';
 
 const Header = ({ onSearch }) => {
+    const navigate = useNavigate();
+    const { user, logout, isAuthenticated } = useAuth();
+    const [showUserMenu, setShowUserMenu] = useState(false);
+    const userMenuRef = useRef(null);
     const [isScrolled, setIsScrolled] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -106,10 +111,38 @@ const Header = ({ onSearch }) => {
                         </form>
                     </div>
                     <nav className={`nav-links ${isMobileMenuOpen ? 'mobile-visible' : ''}`}>
-                        <button className="login-button">
-                            <FontAwesomeIcon icon={faUser} />
-                            Login
-                        </button>
+                        {isAuthenticated ? (
+                            <div className="user-menu-container" ref={userMenuRef}>
+                                <button 
+                                    className="user-menu-button"
+                                    onClick={() => setShowUserMenu(!showUserMenu)}
+                                >
+                                    <FontAwesomeIcon icon={faUser} />
+                                    {user?.profile?.firstName}
+                                    <FontAwesomeIcon icon={faCaretDown} />
+                                </button>
+                                {showUserMenu && (
+                                    <div className="user-menu">
+                                        <button 
+                                            className="user-menu-item"
+                                            onClick={() => {
+                                                logout();
+                                                setShowUserMenu(false);
+                                                navigate('/');
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faSignOutAlt} />
+                                            Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Link to="/login" className="login-button">
+                                <FontAwesomeIcon icon={faUser} />
+                                Login
+                            </Link>
+                        )}
                     </nav>
                 </div>
             </div>

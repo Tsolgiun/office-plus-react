@@ -5,7 +5,7 @@ import {
   faPhone,
   faEnvelope
 } from '@fortawesome/free-solid-svg-icons';
-import { propertyService } from '../../services/api';
+import { propertyService } from '../../services/property';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import Header from '../../components/Header/Header';
 import './Home.css';

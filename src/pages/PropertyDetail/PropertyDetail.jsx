@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { propertyService } from '../../services/api';
+import { propertyService } from '../../services/property';
 import './PropertyDetail.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 

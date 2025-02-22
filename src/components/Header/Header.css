@@ -312,3 +312,81 @@
         transform: translateY(0);
     }
 }
+
+/* User Menu Styles */
+.user-menu-container {
+    position: relative;
+}
+
+.user-menu-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.user-menu-button:hover {
+    background: #0056b3;
+}
+
+.user-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    z-index: 1000;
+    animation: slideDown 0.2s ease-out forwards;
+}
+
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    color: #333;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+}
+
+.user-menu-item:hover {
+    background-color: #f5f5f5;
+}
+
+.user-menu-item svg {
+    width: 16px;
+    color: #666;
+}
+
+/* Mobile styles for user menu */
+@media (max-width: 768px) {
+    .user-menu-container {
+        width: 100%;
+    }
+
+    .user-menu-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .user-menu {
+        position: static;
+        margin-top: 8px;
+        box-shadow: none;
+        border: 1px solid #eee;
+    }
+}

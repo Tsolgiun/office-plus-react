@@ -27,6 +27,14 @@ mongoose.connection.on('disconnected', () => {
   console.log('MongoDB disconnected');
 });
 
+// Environment variables
+require('dotenv').config();
+
+if (!process.env.JWT_SECRET) {
+  console.error('JWT_SECRET environment variable is required!');
+  process.exit(1);
+}
+
 // Import models (in order of dependencies)
 require('./models/Facility');
 require('./models/Amenity');
@@ -37,8 +45,10 @@ require('./models/Booking');
 
 // Routes
 const propertiesRoutes = require('./routes/properties');
+const authRoutes = require('./routes/auth');
 console.log('Models registered, setting up routes...');
 app.use('/api/properties', propertiesRoutes);
+app.use('/api/auth', authRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

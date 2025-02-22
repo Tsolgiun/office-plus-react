@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header/Header';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
-import { propertyService } from '../../services/api';
+import { propertyService } from '../../services/property';
 import './Listings.css';
 
 const Listings = () => {
