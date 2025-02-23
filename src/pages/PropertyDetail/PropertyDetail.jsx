@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { propertyService } from '../../services/property';
+import Header from '../../components/Header/Header';
 import './PropertyDetail.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -68,7 +69,9 @@ const PropertyDetail = () => {
   }
 
   return (
-    <div className="property-detail-container">
+    <>
+      <Header />
+      <div className="property-detail-container">
       <div className="property-detail-header">
         <h1>{property.title}</h1>
         <div className="property-price">{property.price}</div>
@@ -144,7 +147,8 @@ const PropertyDetail = () => {
           </p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
