@@ -123,6 +123,14 @@ const Header = ({ onSearch }) => {
                                 </button>
                                 {showUserMenu && (
                                     <div className="user-menu">
+                                        <Link 
+                                            to="/profile" 
+                                            className="user-menu-item"
+                                            onClick={() => setShowUserMenu(false)}
+                                        >
+                                            <FontAwesomeIcon icon={faUser} />
+                                            Profile
+                                        </Link>
                                         <button 
                                             className="user-menu-item"
                                             onClick={() => {
