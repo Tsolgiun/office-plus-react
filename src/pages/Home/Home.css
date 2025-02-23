@@ -13,7 +13,6 @@
   background-size: cover;
   background-position: center;
   color: white;
-  animation: slowZoom 20s ease-in-out infinite alternate;
   position: relative;
   overflow: hidden;
 }
@@ -65,15 +64,6 @@
   background-color: #0056b3;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-@keyframes slowZoom {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.1);
-  }
 }
 
 .office-listings {

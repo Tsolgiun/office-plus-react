@@ -4,36 +4,52 @@ import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import { propertyService } from '../../services/property';
 import './Listings.css';
 
+const PropertySkeleton = () => (
+  <div className="property-card skeleton">
+    <div className="property-image skeleton-image"></div>
+    <div className="property-info">
+      <div className="skeleton-line title"></div>
+      <div className="skeleton-line price"></div>
+      <div className="skeleton-line"></div>
+      <div className="skeleton-features">
+        <div className="skeleton-line"></div>
+        <div className="skeleton-line"></div>
+      </div>
+    </div>
+  </div>
+);
+
 const Listings = () => {
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [itemsPerPage] = useState(12);
 
   useEffect(() => {
     loadProperties();
-  }, []);
+  }, [page]);
 
   const loadProperties = async () => {
+    setLoading(true);
     try {
-      console.log('Fetching properties from API...');
-      const data = await propertyService.getAllProperties();
-      console.log('Received properties:', data);
-
-      // Validate property data
+      const { properties: data, pagination } = await propertyService.getAllProperties(page, itemsPerPage);
+      
       const validProperties = data.filter(property => {
         const isValid = property.title && 
-                       property.building && 
-                       property.building.name && 
-                       property.amenities;
-        
+                     property.building && 
+                     property.building.name && 
+                     property.amenities;
+      
         if (!isValid) {
           console.warn('Invalid property data:', property);
         }
         return isValid;
       });
 
-      console.log('Valid properties count:', validProperties.length);
+      setTotalPages(pagination.pages);
       setProperties(validProperties);
       setFilteredProperties(validProperties);
       setError(null);
@@ -79,6 +95,11 @@ const Listings = () => {
     setFilteredProperties(filtered);
   };
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="listings-page">
       <Header onSearch={handleSearch} />
@@ -87,19 +108,62 @@ const Listings = () => {
         <section className="listings-section">
           <h2>Available Office Spaces</h2>
           {loading ? (
-            <div className="loading">Loading properties...</div>
-          ) : error ? (
-            <div className="error">{error}</div>
-          ) : (
             <div className="property-grid">
-              {filteredProperties.length > 0 ? (
-                filteredProperties.map(property => (
-                  <PropertyCard key={property.id} property={property} />
-                ))
-              ) : (
-                <p className="no-results">No office spaces found matching your search.</p>
-              )}
+              {[...Array(itemsPerPage)].map((_, index) => (
+                <PropertySkeleton key={index} />
+              ))}
             </div>
+          ) : error ? (
+            <div className="error">
+              {error}
+              <button onClick={() => loadProperties()} className="retry-button">
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="property-grid">
+                {filteredProperties.length > 0 ? (
+                  filteredProperties.map(property => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))
+                ) : (
+                  <p className="no-results">No office spaces found matching your search.</p>
+                )}
+              </div>
+              
+              {totalPages > 1 && (
+                <div className="pagination">
+                  <button 
+                    onClick={() => handlePageChange(page - 1)}
+                    disabled={page === 1}
+                    className="pagination-button"
+                  >
+                    Previous
+                  </button>
+                  
+                  <div className="pagination-numbers">
+                    {[...Array(totalPages)].map((_, index) => (
+                      <button
+                        key={index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={`pagination-number ${page === index + 1 ? 'active' : ''}`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => handlePageChange(page + 1)}
+                    disabled={page === totalPages}
+                    className="pagination-button"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </section>
       </main>
