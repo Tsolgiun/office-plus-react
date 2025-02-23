@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import AdminRoute from './components/AdminRoute/AdminRoute';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 import Home from './pages/Home/Home';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import Listings from './pages/Listings/Listings';
@@ -27,6 +29,14 @@ function App() {
                 <PrivateRoute>
                   <UserProfile />
                 </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/admin/*" 
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
               } 
             />
             <Route path="*" element={<Navigate to="/" />} />
