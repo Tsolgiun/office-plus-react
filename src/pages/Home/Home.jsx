@@ -19,6 +19,12 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const observerTarget = useRef(null);
 
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(5000);
+
+  const [maxSquare,setMaxSquare] = useState(200);
+  const [minSquare,setMinSquare] = useState(100);
+
   // Fetch properties
   const fetchProperties = async (page, search = searchTerm) => {
     try {
@@ -83,6 +89,44 @@ const Home = () => {
     setSearchTerm(term);
   };
 
+  const handleSquareChange = (event) => {
+    const val = Number(event.target.value);
+    console.log(val)
+    if (val == 100) {
+      setMaxSquare(200);
+      setMinSquare(100);
+    }else if (val == 200) {
+      setMaxSquare(300);
+      setMinSquare(200);
+    }else if (val == 300) {
+      setMaxSquare(500);
+      setMinSquare(300);
+    }else if (val == 500) {
+      setMaxSquare(1000);
+      setMinSquare(500);
+    }
+
+  };
+  const handlePriceChange = (event) => {
+    console.log(properties[0])
+    const val = Number(event.target.value);
+    console.log(val)
+    if (val == 5000) {
+      setMaxPrice(5000);
+      setMinPrice(0);
+    }else if (val == 20000) {
+      setMaxPrice(50000);
+      setMinPrice(20000);
+    }else if (val == 50000) {
+      setMaxPrice(100000);
+      setMinPrice(50000);
+    }
+
+  };
+  const extractPriceAmount = (priceString) => {
+    const match = priceString.replace(/[^0-9.-]+/g, ''); // Remove all non-numeric characters
+    return parseFloat(match);
+  };
   return (
     <div className="home">
       <div className="hero">
@@ -97,6 +141,28 @@ const Home = () => {
       <main className={searchTerm ? 'with-search' : ''}>
         <section className="office-listings">
           <h2>Available Offices</h2>
+          <div className="price-filter">
+            <label htmlFor="priceSelect">价格</label>
+            <select id="priceSelect"  onChange={handlePriceChange}>
+              {/* <option value="">总价不限</option> */}
+              <option value="5000">0.5万以下</option>
+              <option value="20000">2万-5万</option>
+              <option value="50000">5万-10万</option>
+              {/* <option value="100000">10万以上</option> */}
+            </select>
+          </div>
+
+          <div className="price-filter">
+            <label htmlFor="priceSelect">面积</label>
+            <select id="priceSelect"  onChange={handleSquareChange}>
+              {/* <option value="">总价不限</option> */}
+              <option value="100">100-200平</option>
+              <option value="200">200-300平</option>
+              <option value="300">300-500平</option>
+              <option value="500">500-1000平</option>
+              {/* <option value="100000">10万以上</option> */}
+            </select>
+          </div>
           <div className="property-grid">
             {error ? (
               <div className="error-message" role="alert">{error}</div>
@@ -108,7 +174,13 @@ const Home = () => {
               </div>
             ) : (
               <>
-                {properties.map(property => (
+                {properties .filter(property =>
+                    (minPrice === 0 || extractPriceAmount(property.price) >= minPrice) &&
+                    (maxPrice === Infinity || extractPriceAmount(property.price) <= maxPrice)
+                  ).filter(property =>
+                    (extractPriceAmount (property.size) <= maxSquare) &&
+                    ( extractPriceAmount (property.size) >= minSquare) 
+                  ).map(property => (
                   <PropertyCard key={property.id} property={property} />
                 ))}
                 {currentPage < totalPages && (

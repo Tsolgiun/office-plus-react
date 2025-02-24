@@ -233,3 +233,24 @@ main.with-search {
     text-align: center;
   }
 }
+.price-filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.price-filter label {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.price-filter select {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.price-filter select option {
+  padding: 5px;
+}
