@@ -46,9 +46,11 @@ require('./models/Booking');
 // Routes
 const propertiesRoutes = require('./routes/properties');
 const authRoutes = require('./routes/auth');
+const chatRoutes = require('./routes/chat');
 console.log('Models registered, setting up routes...');
 app.use('/api/properties', propertiesRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
