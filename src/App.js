@@ -4,7 +4,6 @@ import AdminRoute from './components/AdminRoute/AdminRoute';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import Home from './pages/Home/Home';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
-import Listings from './pages/Listings/Listings';
 import PropertyDetail from './pages/PropertyDetail/PropertyDetail';
 import UserProfile from './pages/UserProfile/UserProfile';
 import Login from './pages/Auth/Login';
@@ -19,7 +18,6 @@ function App() {
         <div className="app">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/offices" element={<Listings />} />
             <Route path="/office/:id" element={<PropertyDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

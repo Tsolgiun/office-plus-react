@@ -16,13 +16,14 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const observerTarget = useRef(null);
 
   // Fetch properties
-  const fetchProperties = async (page) => {
+  const fetchProperties = async (page, search = searchTerm) => {
     try {
       setLoading(true);
-      const data = await propertyService.getAllProperties(page);
+      const data = await propertyService.getAllProperties(page, 10, search);
       
       if (!data || !data.properties) {
         throw new Error('Invalid response from server');
@@ -41,8 +42,15 @@ const Home = () => {
 
   // Initial load
   useEffect(() => {
-    fetchProperties(1);
+    fetchProperties(1, '');
   }, []);
+
+  // Reset pagination and fetch properties when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+    setProperties([]);
+    fetchProperties(1, searchTerm);
+  }, [searchTerm]);
 
   // Handle infinite scroll
   useEffect(() => {
@@ -67,12 +75,12 @@ const Home = () => {
   // Fetch more properties when page changes
   useEffect(() => {
     if (currentPage > 1) {
-      fetchProperties(currentPage);
+      fetchProperties(currentPage, searchTerm);
     }
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
 
-  const handleSearch = (searchTerm) => {
-    window.location.href = `/offices?search=${encodeURIComponent(searchTerm)}`;
+  const handleSearch = (term) => {
+    setSearchTerm(term);
   };
 
   return (
@@ -84,33 +92,34 @@ const Home = () => {
         </div>
       </div>
 
-      <Header onSearch={handleSearch} />
+      <Header onSearch={handleSearch} searchValue={searchTerm} />
       
-      <main>
+      <main className={searchTerm ? 'with-search' : ''}>
         <section className="office-listings">
           <h2>Available Offices</h2>
-      <div className="property-grid">
-        {error ? (
-          <div className="error-message" role="alert">{error}</div>
-        ) : properties.length === 0 && loading ? (
-          <div className="loading-message" role="status">Loading properties...</div>
-        ) : properties.length === 0 ? (
-          <div className="no-results" role="status">No properties found</div>
-        ) : (
-          <>
-            {properties.map(property => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-            {currentPage < totalPages && (
-              <div ref={observerTarget} className="loading-indicator" role="status">
-                {loading ? 'Loading more offices...' : 'Scroll for more'}
+          <div className="property-grid">
+            {error ? (
+              <div className="error-message" role="alert">{error}</div>
+            ) : properties.length === 0 && loading ? (
+              <div className="loading-message" role="status">Loading properties...</div>
+            ) : properties.length === 0 ? (
+              <div className="no-results" role="status">
+                {searchTerm ? `No properties found for "${searchTerm}"` : 'No properties found'}
               </div>
+            ) : (
+              <>
+                {properties.map(property => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
+                {currentPage < totalPages && (
+                  <div ref={observerTarget} className="loading-indicator" role="status">
+                    {loading ? 'Loading more offices...' : 'Scroll for more'}
+                  </div>
+                )}
+              </>
             )}
-          </>
-        )}
-      </div>
+          </div>
         </section>
-
       </main>
 
       <footer className="sticky-footer">

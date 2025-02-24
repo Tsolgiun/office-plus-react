@@ -66,6 +66,10 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+main.with-search {
+  padding-top: 2rem;
+}
+
 .office-listings {
   padding: 2rem;
   max-width: 1200px;
@@ -97,10 +101,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #f8f9fa;
 }
 
 .loading-message {
-  background-color: #f8f9fa;
   color: #666;
 }
 
@@ -111,9 +115,9 @@
 }
 
 .no-results {
-  background-color: #f8f9fa;
   color: #666;
   border: 1px dashed #ccc;
+  width: 100%;
 }
 
 .loading-indicator {

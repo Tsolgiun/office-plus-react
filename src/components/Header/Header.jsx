@@ -6,13 +6,13 @@ import { useAuth } from '../../contexts/AuthContext';
 import Logo from '../Logo/Logo';
 import './Header.css';
 
-const Header = ({ onSearch }) => {
+const Header = ({ onSearch, searchValue }) => {
     const navigate = useNavigate();
     const { user, logout, isAuthenticated } = useAuth();
     const [showUserMenu, setShowUserMenu] = useState(false);
     const userMenuRef = useRef(null);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState(searchValue || '');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('');
     const location = useLocation();
@@ -79,6 +79,11 @@ const Header = ({ onSearch }) => {
         }
         setIsMobileMenuOpen(false);
     };
+
+    // Update local search term when prop changes
+    useEffect(() => {
+        setSearchTerm(searchValue || '');
+    }, [searchValue]);
 
     return (
         <header className={`header ${isHomePage ? (isScrolled ? 'scrolled' : '') : ''} ${isMobileMenuOpen ? 'menu-open' : ''} ${!isScrolled ? 'transparent' : ''} ${isDetailsPage ? 'details-page' : ''}`}>

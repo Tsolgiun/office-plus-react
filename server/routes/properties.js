@@ -19,11 +19,22 @@ router.get('/', async (req, res) => {
       throw new Error('Database connection is not ready');
     }
 
+    // Build search query
+    const searchQuery = {};
+    if (req.query.search) {
+      const searchRegex = new RegExp(req.query.search, 'i');
+      searchQuery.$or = [
+        { title: searchRegex },
+        { 'specifications.type': searchRegex },
+        { 'location.address': searchRegex }
+      ];
+    }
+
     // Get total count for pagination
-    const total = await Property.countDocuments();
+    const total = await Property.countDocuments(searchQuery);
     
     // Get paginated properties with populated data
-    const properties = await Property.find()
+    const properties = await Property.find(searchQuery)
       .populate({
         path: 'buildingId',
         model: Building,

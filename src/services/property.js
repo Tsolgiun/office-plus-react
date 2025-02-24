@@ -2,11 +2,13 @@ import api from './api';
 
 export const propertyService = {
   // Get all properties
-  getAllProperties: async (page = 1, limit = 10) => {
+  getAllProperties: async (page = 1, limit = 10, search = '') => {
     try {
-      const response = await api.get('/properties', {
-        params: { page, limit }
-      });
+      const params = { page, limit };
+      if (search) {
+        params.search = search;
+      }
+      const response = await api.get('/properties', { params });
       
       if (!response.data || !response.data.properties || !Array.isArray(response.data.properties)) {
         throw new Error('Invalid response format from API');
