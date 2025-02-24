@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Chatbot from '../../components/Chatbot/Chatbot';
 import { 
   faPhone,
   faEnvelope
@@ -141,27 +142,29 @@ const Home = () => {
       <main className={searchTerm ? 'with-search' : ''}>
         <section className="office-listings">
           <h2>Available Offices</h2>
-          <div className="price-filter">
-            <label htmlFor="priceSelect">价格</label>
-            <select id="priceSelect"  onChange={handlePriceChange}>
-              {/* <option value="">总价不限</option> */}
-              <option value="5000">0.5万以下</option>
-              <option value="20000">2万-5万</option>
-              <option value="50000">5万-10万</option>
-              {/* <option value="100000">10万以上</option> */}
-            </select>
-          </div>
+          <div className="filters-container">
+            <div className="price-filter">
+              <label htmlFor="priceSelect">价格</label>
+              <select id="priceSelect" onChange={handlePriceChange}>
+                {/* <option value="">总价不限</option> */}
+                <option value="5000">0.5万以下</option>
+                <option value="20000">2万-5万</option>
+                <option value="50000">5万-10万</option>
+                {/* <option value="100000">10万以上</option> */}
+              </select>
+            </div>
 
-          <div className="price-filter">
-            <label htmlFor="priceSelect">面积</label>
-            <select id="priceSelect"  onChange={handleSquareChange}>
-              {/* <option value="">总价不限</option> */}
-              <option value="100">100-200平</option>
-              <option value="200">200-300平</option>
-              <option value="300">300-500平</option>
-              <option value="500">500-1000平</option>
-              {/* <option value="100000">10万以上</option> */}
-            </select>
+            <div className="area-filter">
+              <label htmlFor="squareSelect">面积</label>
+              <select id="squareSelect" onChange={handleSquareChange}>
+                {/* <option value="">总价不限</option> */}
+                <option value="100">100-200平</option>
+                <option value="200">200-300平</option>
+                <option value="300">300-500平</option>
+                <option value="500">500-1000平</option>
+                {/* <option value="100000">10万以上</option> */}
+              </select>
+            </div>
           </div>
           <div className="property-grid">
             {error ? (
@@ -194,6 +197,8 @@ const Home = () => {
         </section>
       </main>
 
+      <Chatbot />
+      
       <footer className="sticky-footer">
         <div className="footer-content">
           <div className="footer-section">

@@ -233,24 +233,44 @@ main.with-search {
     text-align: center;
   }
 }
-.price-filter {
+.filters-container {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 20px;
+  margin: 10px 0;
 }
 
-.price-filter label {
-  font-size: 16px;
-  margin-right: 10px;
+.price-filter, .area-filter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.price-filter select {
-  padding: 5px;
+.price-filter label, .area-filter label {
+  color: #333;
+  font-weight: 500;
+  margin-right: 15px;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.price-filter select, .area-filter select {
+  padding: 8px 12px;
   font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.price-filter select option {
-  padding: 5px;
+.price-filter select:hover, .area-filter select:hover {
+  border-color: #007bff;
+}
+
+.price-filter select option, .area-filter select option {
+  padding: 8px;
 }
