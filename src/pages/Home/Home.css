@@ -235,6 +235,7 @@ main.with-search {
 }
 .filters-container {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 20px;
   margin: 10px 0;
@@ -273,4 +274,42 @@ main.with-search {
 
 .price-filter select option, .area-filter select option {
   padding: 8px;
+}
+.price-filter .rang-custom, .area-filter .rang-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.price-filter .rang-custom em , .area-filter select option em {
+  margin: 0 8px;
+}
+
+.price-filter .rang-custom input , .area-filter select option input {
+  width: 80px;
+  padding: 4px 8px;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  background: #f8f9fa;
+  font-size: 14px;
+  text-align: center;
+}
+
+.apply-filter-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 25px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.apply-filter-button:hover {
+  background: #0056b3;
 }
